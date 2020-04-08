@@ -25,8 +25,9 @@ def valid_input(prompt, moves):
                 print_pause("Please pick 'rock', 'paper' or 'scissors'")
 
 class Player:
-    moves = ['rock', 'paper', 'scissors']
-    def __init__(self):
+    def __init__(self, moves):
+        moves = ['rock', 'paper', 'scissors']
+
     def move(self):
         return 'rock'
 
@@ -35,7 +36,6 @@ class Player:
         self.their_move = their_move
 
 class HumanPlayer(Player):
-
     move1 = valid_input('Rock, Paper, Scissors?>  ', moves)
 
 
@@ -45,13 +45,17 @@ class RandomPlayer(Player):
 
 class CyclePlayer(Player):
     def move(self):
-        for i in range 2:
-            return moves[i]
-            i += 1
+        for i in range (2):
+            if i <= 2:
+                return moves[i]
+                i += 1
+            else:
+                i = 0
+                return moves[i]
 
 class ReflectPlayer(Player):
     def move(self):
-        if self.their_move = None:
+        if self.their_move == None:
             return random.choice(moves)
         else:
             move = self.their_move
@@ -63,14 +67,16 @@ def beats(one, two):
 
 
 class Game:
-    round_count = 0
+
 
     def __init__(self, p1, p2):
         self.p1 = p1
         self.p2 = p2
         self.score_p1 = 0
         self.score_p2 = 0
+
     def play_round(self):
+        round_count = 0
         print(f"Round:{round_count}")
         move1 = self.p1.move()
         move2 = self.p2.move()
