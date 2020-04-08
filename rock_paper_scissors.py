@@ -13,6 +13,12 @@ def print_pause(text, length=1):
     time.sleep(length)
 
 class Player:
+    def __init__(self):
+        self.win = 0
+        self.loss = 0
+        self.tie = 0
+        self.my_move = None
+        self.their_move = None
     def move(self):
         return 'rock'
 
@@ -36,27 +42,37 @@ class HumanPlayer(Player):
         return move
 
 class RandomPlayer(Player):
-    # def __init__(self):
+    def __init__(self):
+        # Player.__init__(self)
+        print_pause("\nYou'll never guess!")
     def move(self):
         return (random.choice(moves))
 
 
 class CyclePlayer(Player):
+    def __init__(self):
+        # Player.__init__(self)
+
+        print_pause("\nThere's a method to the madness!")
     def move(self):
-        for i in range (3):
-            if i <= 2:
-                return moves[i]
-                i += 1
-            else:
-                i = 0
-                return moves[i]
+        if self.my_move == 'rock':
+            return moves[1]
+        elif self.my_move == 'paper':
+            return moves[2]
+        else:
+            return moves[0]
+
 
 class ReflectPlayer(Player):
+    def __init__(self):
+        # Player.__init__(self)
+
+        print_pause("\nI know you are but what am I?")
     def move(self):
         if self.their_move == None:
             return random.choice(moves)
         else:
-            move = self.their_move
+            return self.their_move
 
 def beats(one, two):
     return ((one == 'rock' and two == 'scissors') or
@@ -70,27 +86,27 @@ class Game:
         self.round= 1
         self.p1 = p1
         self.p2 = p2
-        self.win = 0
-        self.loss = 0
-        self.tie = 0
+
 
     def play_round(self):
         move1 = self.p1.move()
         move2 = self.p2.move()
-        print(f"Player 1: {move1}  Player 2: {move2}")
+        print(f"\nPlayer 1: {move1}  Player 2: {move2}")
         self.p1.learn(move1, move2)
         self.p2.learn(move2, move1)
         self.round += 1
 
 
     def play_game(self):
-        print("Game start!")
+        print("\nGame start!")
         for round in range(1,4):
-            print(f"Round {round}:")
+            print(f"Round {round}:\n")
             self.play_round()
         print("Game over!")
 
 
 if __name__ == '__main__':
-    game = Game(Player(), HumanPlayer())
+    opponents = [Player, RandomPlayer, CyclePlayer, ReflectPlayer]
+    os.system('clear')
+    game = Game(HumanPlayer(), random.choice(opponents)())
     game.play_game()
