@@ -9,10 +9,19 @@ moves = ['rock', 'paper', 'scissors']
 
 
 
-def print_pause(text, length=1):
+def print_pause(text, length=.8):
     """Print a peice of text and wait for some time."""
     print(text)
     time.sleep(length)
+
+def valid_input(prompt, options):
+    """Validate input for certain functions."""
+    while True:
+        response = input(prompt).lower()
+        for option in options:
+            if option in response:
+                return response
+        print_pause("That doesn't work, try again.", 1)
 
 class Player:
     """The Player class is the parent class for all of the Players."""
@@ -50,7 +59,7 @@ class HumanPlayer(Player):
                 sys.exit()
             elif move not in moves:
                 print_pause("Please pick 'rock', 'paper' or 'scissors',"
-                " or 'x' to Exit")
+                " or 'x' to Exit", .5)
             else:
                 break
         return move
@@ -122,22 +131,25 @@ def keep_score(self, move1, move2):
         print_pause(
                     '\033[1;32m'
                     'You won the round!'
-                    '\033[0m\n'
+                    '\033[0m'
                     )
     elif beats(move2, move1):
         self.loss += 1
         print_pause(
                     '\033[1;31m'
                     'You lost the round!'
-                    '\033[0m\n'
+                    '\033[0m'
                     )
     else:
         self.tie += 1
         print_pause(
                     "\033[1;34m"
                     "Tie!"
-                    "\033[0m\n"
+                    "\033[0m"
                     )
+
+
+
 
 class Game:
     """Parent class for Game functions."""
@@ -164,7 +176,7 @@ class Game:
                         "\033[0m\n"
                         "Player 2:"
                         "\033[1;31m"
-                        f"{move2.upper()}\n"
+                        f"{move2.upper()}"
                         "\033[0m\n"
                         )
         elif beats(move2, move1):
@@ -175,7 +187,7 @@ class Game:
                         "\033[0m\n"
                         "Player 2:"
                         "\033[1;32m"
-                        f"{move2.upper()}\n"
+                        f"{move2.upper()}"
                         "\033[0m\n"
                         )
         else:
@@ -186,7 +198,7 @@ class Game:
                         "\033[0m\n"
                         "Player 2:"
                         "\033[1;34m"
-                        f"{move2.upper()}\n"
+                        f"{move2.upper()}"
                         "\033[0m\n"
                         )
         self.p1.learn(move1, move2)
@@ -206,39 +218,56 @@ class Game:
         """Play the game."""
         for round in range(1,6):
             if self.tie == 3:
-               print_pause(
+                print_pause(
                            "\n\033[5;34m"
                            "Tie Game! Meh!"
-                           "\033[0m\n\n",
-                           5)
-               os.system('clear')
-               break
+                           "\033[0m\n",
+                           3)
+                replay()
             elif self.win == 2:
                 print_pause(
                             '\n\033[5;32m'
                             'You win! Hooray!'
-                            '\033[0m\n\n',
-                            5)
-                os.system('clear')
-                break
+                            '\033[0m\n',
+                            3)
+                replay()
             elif self.loss == 2:
                 print_pause(
                             '\n\033[5;31m'
                             'You Lose! Boo!'
-                            '\033[0m\n\n',
-                            5)
-                os.system('clear')
-                break
+                            '\033[0m\n',
+                            3)
+                replay()
             elif self.win < 2 and self.loss < 2:
                 print_pause(
-                            "\n\033[1;35m"
+                            "\033[1;35m"
                             f"Round {round}:"
                             "\033[0m\n"
                             )
                 self.play_round()
 
+def replay():
+    """Prompt player if they would like to play again."""
+    yes_list = ["Yeehaw!", "Oh no not again!", "Lets do this!",
+                "One more turn!", "Why does this keep happening to me?"]
+    choice = valid_input("\nWould you like to play again? y/n?>>>", ["y", "n"])
 
-
+    if choice == "y":
+        print_pause(random.choice(yes_list))
+        os.system('clear')
+        game = Game(HumanPlayer(), random.choice(opponents)())
+        game.play_game()
+    elif choice == "n":
+        print_pause(
+                    "\033[1;31m"
+                    "Get me out of here!"
+                    "\n\033[0m", 1.5)
+        print_pause(
+                    "\033[1;32m"
+                    "Thanks for playing!"
+                    "\n\033[1:32m", 3)
+        os.system('clear')
+        sys.exit()
 
 if __name__ == '__main__':
     os.system('clear')
