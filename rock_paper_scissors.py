@@ -7,12 +7,14 @@ import time
 import random
 moves = ['rock', 'paper', 'scissors']
 
+# TODO: add "match options", eg 2 of 3, 3 of 5, first to 10, etc
 
 
 def print_pause(text, length=.8):
     """Print a peice of text and wait for some time."""
     print(text)
     time.sleep(length)
+
 
 def valid_input(prompt, options):
     """Validate input for certain functions."""
@@ -22,6 +24,7 @@ def valid_input(prompt, options):
             if option in response:
                 return response
         print_pause("That doesn't work, try again.", 1)
+
 
 class Player:
     """The Player class is the parent class for all of the Players."""
@@ -36,6 +39,7 @@ class Player:
         """Learn opponents moves."""
         self.my_move = my_move
         self.their_move = their_move
+
 
 class HumanPlayer(Player):
     """Player class controlled by user."""
@@ -59,10 +63,11 @@ class HumanPlayer(Player):
                 sys.exit()
             elif move not in moves:
                 print_pause("Please pick 'rock', 'paper' or 'scissors',"
-                " or 'x' to Exit", .5)
+                            " or 'x' to Exit", .5)
             else:
                 break
         return move
+
 
 class RandomPlayer(Player):
     """Player class that randomly picks moves."""
@@ -74,6 +79,7 @@ class RandomPlayer(Player):
                     "\nYou'll never guess!"
                     "\033[0m\n"
                     )
+
     def move(self):
         """Define moveset for RandomPlayer."""
         return (random.choice(moves))
@@ -91,6 +97,7 @@ class CyclePlayer(Player):
                     "\nThere's a method to the madness!"
                     "\033[0m\n"
                     )
+
     def move(self):
         """Define moveset for CyclePlayer."""
         if self.my_move == 'rock':
@@ -99,6 +106,7 @@ class CyclePlayer(Player):
             return moves[2]
         else:
             return moves[0]
+
 
 class ReflectPlayer(Player):
     """Player class that copies player moves."""
@@ -111,18 +119,21 @@ class ReflectPlayer(Player):
                     "\nI know you are but what am I?"
                     "\033[0m\n"
                     )
+
     def move(self):
         """Define moveset for ReflectPlayer."""
-        if self.their_move == None:
+        if self.their_move is None:
             return random.choice(moves)
         else:
             return self.their_move
+
 
 def beats(one, two):
     """Define round results."""
     return ((one == 'rock' and two == 'scissors') or
             (one == 'scissors' and two == 'paper') or
             (one == 'paper' and two == 'rock'))
+
 
 def keep_score(self, move1, move2):
     """Keep track of and display game score."""
@@ -149,20 +160,17 @@ def keep_score(self, move1, move2):
                     )
 
 
-
-
 class Game:
     """Parent class for Game functions."""
 
     def __init__(self, p1, p2):
         """Initialize Game."""
-        self.round= 1
+        self.round = 1
         self.p1 = p1
         self.p2 = p2
         self.win = 0
         self.loss = 0
         self.tie = 0
-
 
     def play_round(self):
         """Establish round mechanics."""
@@ -213,10 +221,9 @@ class Game:
                     )
         self.round += 1
 
-
     def play_game(self):
         """Play the game."""
-        for round in range(1,6):
+        for round in range(1, 6):
             if self.tie == 3:
                 print_pause(
                            "\n\033[5;34m"
@@ -246,6 +253,7 @@ class Game:
                             )
                 self.play_round()
 
+
 def replay():
     """Prompt player if they would like to play again."""
     yes_list = ["Yeehaw!", "Oh no not again!", "Lets do this!",
@@ -269,7 +277,9 @@ def replay():
         os.system('clear')
         sys.exit()
 
+
 if __name__ == '__main__':
+
     os.system('clear')
     print_pause(
                 "\033[1;36m"
