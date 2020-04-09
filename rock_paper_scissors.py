@@ -10,7 +10,7 @@ moves = ['rock', 'paper', 'scissors']
 
 
 def print_pause(text, length=1):
-    """Print a peice of text and waits."""
+    """Print a peice of text and wait for some time."""
     print(text)
     time.sleep(length)
 
@@ -34,9 +34,18 @@ class HumanPlayer(Player):
     def move(self):
         """Define how HumanPlayer selects moves."""
         while True:
-            move = input('Rock, Paper, Scissors? "x" to Exit>  ').lower()
+            move = input(
+                        '\033[1;30;47m'
+                        'Rock, Paper, Scissors? "x" to Exit>>>'
+                        '\033[0m   '
+                        ).lower()
             if move == 'x':
-                print_pause('Goodbye!')
+                print_pause(
+                            '\n\033[1;32m'
+                            'Goodbye!'
+                            '\033[0m\n\n'
+                            )
+                time.sleep(2.5)
                 os.system('clear')
                 sys.exit()
             elif move not in moves:
@@ -51,7 +60,11 @@ class RandomPlayer(Player):
 
     def __init__(self):
         """Initialize RandomPlayer."""
-        print_pause("\nYou'll never guess!")
+        print_pause(
+                    "\033[1;34m"
+                    "\nYou'll never guess!"
+                    "\033[0m\n"
+                    )
     def move(self):
         """Define moveset for RandomPlayer."""
         return (random.choice(moves))
@@ -64,7 +77,11 @@ class CyclePlayer(Player):
         """Initialize CyclePlayer."""
         self.my_move = None
 
-        print_pause("\nThere's a method to the madness!")
+        print_pause(
+                    "\033[1;34m"
+                    "\nThere's a method to the madness!"
+                    "\033[0m\n"
+                    )
     def move(self):
         """Define moveset for CyclePlayer."""
         if self.my_move == 'rock':
@@ -80,7 +97,11 @@ class ReflectPlayer(Player):
     def __init__(self):
         """Initialize ReflectPlayer."""
         self.their_move = None
-        print_pause("\nI know you are but what am I?")
+        print_pause(
+                    "\033[1;34m"
+                    "\nI know you are but what am I?"
+                    "\033[0m\n"
+                    )
     def move(self):
         """Define moveset for ReflectPlayer."""
         if self.their_move == None:
@@ -98,13 +119,25 @@ def keep_score(self, move1, move2):
     """Keep track of and display game score."""
     if beats(move1, move2):
         self.win += 1
-        print_pause('You won the round!\n')
+        print_pause(
+                    '\033[1;32m'
+                    'You won the round!'
+                    '\033[0m\n'
+                    )
     elif beats(move2, move1):
         self.loss += 1
-        print_pause('You lost the round!\n')
+        print_pause(
+                    '\033[1;31m'
+                    'You lost the round!'
+                    '\033[0m\n'
+                    )
     else:
         self.tie += 1
-        print_pause("Tie!\n")
+        print_pause(
+                    "\033[1;34m"
+                    "Tie!"
+                    "\033[0m\n"
+                    )
 
 class Game:
     """Parent class for Game functions."""
@@ -123,36 +156,104 @@ class Game:
         """Establish round mechanics."""
         move1 = self.p1.move()
         move2 = self.p2.move()
-        print_pause(f"\nPlayer 1: {move1}  Player 2: {move2}\n")
+        if beats(move1, move2):
+            print_pause(
+                        "\nPlayer 1:"
+                        "\033[1;32m"
+                        f"{move1.upper()}"
+                        "\033[0m\n"
+                        "Player 2:"
+                        "\033[1;31m"
+                        f"{move2.upper()}\n"
+                        "\033[0m\n"
+                        )
+        elif beats(move2, move1):
+            print_pause(
+                        "\nPlayer 1:"
+                        "\033[1;31m"
+                        f"{move1.upper()}"
+                        "\033[0m\n"
+                        "Player 2:"
+                        "\033[1;32m"
+                        f"{move2.upper()}\n"
+                        "\033[0m\n"
+                        )
+        else:
+            print_pause(
+                        "\nPlayer 1:"
+                        "\033[1;34m"
+                        f"{move1.upper()}"
+                        "\033[0m\n"
+                        "Player 2:"
+                        "\033[1;34m"
+                        f"{move2.upper()}\n"
+                        "\033[0m\n"
+                        )
         self.p1.learn(move1, move2)
         self.p2.learn(move2, move1)
         keep_score(self, move1, move2)
-        print_pause(f"Wins: {self.win}\nLosses: {self.loss}\nTies: {self.tie}")
+        print_pause(
+                    "\n\033[1;33;40m"
+                    f"Wins:   {self.win}\n"
+                    f"Losses: {self.loss}\n"
+                    f"Ties:   {self.tie}\n"
+                    "\033[0m"
+                    )
         self.round += 1
 
 
     def play_game(self):
         """Play the game."""
-        print("\nGame start!")
         for round in range(1,6):
             if self.tie == 3:
-               print_pause("\nLet's just call it a tie!\n\n")
+               print_pause(
+                           "\n\033[5;34m"
+                           "Tie Game! Meh!"
+                           "\033[0m\n\n",
+                           5)
+               os.system('clear')
                break
             elif self.win == 2:
-                print_pause('\nYou win! Hooray!\n\n')
+                print_pause(
+                            '\n\033[5;32m'
+                            'You win! Hooray!'
+                            '\033[0m\n\n',
+                            5)
+                os.system('clear')
                 break
             elif self.loss == 2:
-                print_pause('\nYou Lose! Boo!\n\n')
+                print_pause(
+                            '\n\033[5;31m'
+                            'You Lose! Boo!'
+                            '\033[0m\n\n',
+                            5)
+                os.system('clear')
                 break
             elif self.win < 2 and self.loss < 2:
-                print(f"\nRound {round}:\n")
+                print_pause(
+                            "\n\033[1;35m"
+                            f"Round {round}:"
+                            "\033[0m\n"
+                            )
                 self.play_round()
 
 
 
 
 if __name__ == '__main__':
-    opponents = [Player, RandomPlayer, CyclePlayer, ReflectPlayer]
     os.system('clear')
+    print_pause(
+                "\033[1;36m"
+                "Rock, Paper, Scissors..."
+                "\n\033[0m",
+                3
+                )
+    print_pause(
+                "\033[5;32m"
+                "Go!"
+                "\033[0m",
+                1.5
+                )
+    opponents = [Player, RandomPlayer, CyclePlayer, ReflectPlayer]
     game = Game(HumanPlayer(), random.choice(opponents)())
     game.play_game()
